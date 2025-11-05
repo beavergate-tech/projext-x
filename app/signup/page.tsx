@@ -11,7 +11,7 @@ import { signIn } from "next-auth/react";
  * Allows users to create a new account with email and password.
  * After successful registration, users are redirected to login.
  */
-export default function SignupPage() {
+const SignupPage = () => {
   const router = useRouter();
   const [formData, setFormData] = useState({
     name: "",
@@ -250,4 +250,6 @@ export default function SignupPage() {
       </div>
     </div>
   );
-}
+};
+
+export default SignupPage;
