@@ -16,7 +16,7 @@ export default defineConfig({
   dialect: "postgresql",
 
   // Schema files location
-  schema: "./lib/db/schema.ts",
+  schema: "./lib/drizzle/schema/index.ts",
 
   // Output directory for migrations
   out: "./drizzle",

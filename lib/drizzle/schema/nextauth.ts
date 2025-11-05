@@ -5,17 +5,23 @@ import {
   uuid,
   primaryKey,
   integer,
+  pgEnum,
 } from "drizzle-orm/pg-core";
 import type { AdapterAccount } from "@auth/core/adapters";
 
 /**
- * Auth.js Database Schema
+ * NextAuth.js Database Schema
  *
- * This schema follows the Auth.js adapter specification.
+ * Tables required for Auth.js adapter with custom role support.
  */
 
 /**
- * Users table - Core user information
+ * User role enum
+ */
+export const roleEnum = pgEnum("role", ["LANDLORD", "TENANT"]);
+
+/**
+ * Users table - Core user authentication information
  */
 export const users = pgTable("user", {
   id: uuid("id").defaultRandom().primaryKey(),
@@ -24,6 +30,8 @@ export const users = pgTable("user", {
   emailVerified: timestamp("emailVerified", { mode: "date" }),
   image: text("image"),
   password: text("password"), // For credentials provider
+  phone: text("phone"),
+  role: roleEnum("role").notNull().default("TENANT"),
   createdAt: timestamp("created_at").defaultNow().notNull(),
   updatedAt: timestamp("updated_at").defaultNow().notNull(),
 });
@@ -89,3 +97,4 @@ export type NewUser = typeof users.$inferInsert;
 export type Account = typeof accounts.$inferSelect;
 export type Session = typeof sessions.$inferSelect;
 export type VerificationToken = typeof verificationTokens.$inferSelect;
+export type Role = (typeof roleEnum.enumValues)[number];
