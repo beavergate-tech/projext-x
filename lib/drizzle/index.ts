@@ -3,36 +3,51 @@ import postgres from "postgres";
 import * as schema from "./schema";
 
 /**
- * Universal PostgreSQL Database Client
+ * Serverless Database Client
+ *
+ * Optimized for serverless environments (Vercel, AWS Lambda, Edge Functions)
  *
  * This configuration works with ANY PostgreSQL provider:
  * - Vercel Postgres
  * - Neon
- * - Supabase
+ * - Supabase (use connection pooling URL - port 6543)
  * - Railway
  * - Local PostgreSQL
- * - Any standard PostgreSQL database
  *
  * Features:
- * - Connection pooling enabled
- * - Optimized for serverless environments
- * - Prepared statements by default
+ * - Connection caching to prevent exhaustion
+ * - Optimized for serverless cold starts
+ * - Compatible with connection poolers (prepare: false)
  *
  * Environment Variables Required:
  * - DATABASE_URL: PostgreSQL connection string
- *
- * Note: In serverless environments (Vercel, AWS Lambda), set max connections to 1
- * to avoid connection pooling issues. For traditional servers, adjust as needed.
+ *   For Supabase: Use the pooling URL (port 6543, not 5432)
  */
-const connectionString = process.env.DATABASE_URL!;
+const connectionString = process.env.DATABASE_URL;
 
-// Create postgres.js client optimized for serverless (Vercel)
-const queryClient = postgres(connectionString, {
-  max: 1, // Recommended for serverless (Vercel, AWS Lambda)
-  prepare: false, // Disable prepared statements for serverless/pooling
-  // For non-serverless deployments, you can increase this:
-  // max: 10,
-  // prepare: true,
+if (!connectionString) {
+  throw new Error("DATABASE_URL environment variable is not set");
+}
+
+// For serverless environments, we need to handle connections carefully
+let client: postgres.Sql | undefined;
+
+export function getDbClient() {
+  if (!client) {
+    client = postgres(connectionString!, {
+      prepare: false, // Required for connection poolers (Supabase, PgBouncer)
+      max: 1, // Limit connection pool for serverless
+    });
+  }
+  return client;
+}
+
+// Create Drizzle instance
+export const db = drizzle(getDbClient(), {
+  schema,
+  logger: process.env.NODE_ENV === "development",
 });
 
-export const db = drizzle(queryClient, { schema });
+// Export types
+export type Database = typeof db;
+export type Schema = typeof schema;
