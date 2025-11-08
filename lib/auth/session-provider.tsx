@@ -14,6 +14,6 @@ import { ReactNode } from "react";
  *   {children}
  * </SessionProvider>
  */
-export function SessionProvider({ children }: { children: ReactNode }) {
+export const SessionProvider = ({ children }: { children: ReactNode }) => {
   return <NextAuthSessionProvider>{children}</NextAuthSessionProvider>;
-}
+};

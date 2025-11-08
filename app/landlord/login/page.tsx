@@ -1,3 +1,5 @@
+// app/landlord/login/page.tsx
+
 "use client";
 
 import { signIn } from "next-auth/react";
@@ -6,17 +8,17 @@ import { useSearchParams, useRouter } from "next/navigation";
 import Link from "next/link";
 
 /**
- * Login Page
+ * Landlord Login Page
  *
- * Supports three authentication methods:
+ * Dedicated login page for landlords with all authentication methods:
  * 1. Credentials (Email/Password)
  * 2. Google OAuth
  * 3. Magic Link (Email)
  */
-const LoginPageContent = () => {
+const LandlordLoginPageContent = () => {
   const searchParams = useSearchParams();
   const router = useRouter();
-  const callbackUrl = searchParams.get("callbackUrl") || "/";
+  const callbackUrl = searchParams.get("callbackUrl") || "/landlord/dashboard";
 
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -87,7 +89,7 @@ const LoginPageContent = () => {
 
   if (magicLinkSent) {
     return (
-      <div className="flex min-h-screen items-center justify-center bg-gray-50 px-4 py-12 sm:px-6 lg:px-8">
+      <div className="flex min-h-screen items-center justify-center bg-gradient-to-br from-blue-50 to-indigo-100 px-4 py-12 sm:px-6 lg:px-8">
         <div className="w-full max-w-md space-y-8">
           <div>
             <h2 className="mt-6 text-center text-3xl font-bold tracking-tight text-gray-900">
@@ -114,19 +116,48 @@ const LoginPageContent = () => {
   }
 
   return (
-    <div className="flex min-h-screen items-center justify-center bg-gray-50 px-4 py-12 sm:px-6 lg:px-8">
+    <div className="flex min-h-screen items-center justify-center bg-gradient-to-br from-blue-50 to-indigo-100 px-4 py-12 sm:px-6 lg:px-8">
       <div className="w-full max-w-md space-y-8">
         <div>
+          <div className="flex justify-center">
+            <div className="rounded-full bg-indigo-600 p-3">
+              <svg
+                className="h-8 w-8 text-white"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth={2}
+                  d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"
+                />
+              </svg>
+            </div>
+          </div>
           <h2 className="mt-6 text-center text-3xl font-bold tracking-tight text-gray-900">
-            Sign in to your account
+            Landlord Portal
           </h2>
+          <p className="mt-2 text-center text-sm text-gray-600">
+            Sign in to manage your properties
+          </p>
           <p className="mt-2 text-center text-sm text-gray-600">
             Or{" "}
             <Link
-              href="/signup"
+              href="/landlord/signup"
               className="font-medium text-indigo-600 hover:text-indigo-500"
             >
-              create a new account
+              create a landlord account
+            </Link>
+          </p>
+          <p className="mt-4 text-center text-xs text-gray-500">
+            Are you a tenant?{" "}
+            <Link
+              href="/tenant/login"
+              className="font-medium text-indigo-600 hover:text-indigo-500"
+            >
+              Click here to sign in
             </Link>
           </p>
         </div>
@@ -191,7 +222,7 @@ const LoginPageContent = () => {
             <div className="w-full border-t border-gray-300" />
           </div>
           <div className="relative flex justify-center text-sm">
-            <span className="bg-gray-50 px-2 text-gray-500">
+            <span className="bg-gradient-to-br from-blue-50 to-indigo-100 px-2 text-gray-500">
               Or continue with
             </span>
           </div>
@@ -251,11 +282,11 @@ const LoginPageContent = () => {
   );
 };
 
-const LoginPage = () => {
+const LandlordLoginPage = () => {
   return (
     <Suspense
       fallback={
-        <div className="flex min-h-screen items-center justify-center bg-gray-50">
+        <div className="flex min-h-screen items-center justify-center bg-gradient-to-br from-blue-50 to-indigo-100">
           <div className="text-center">
             <div className="inline-block h-8 w-8 animate-spin rounded-full border-4 border-solid border-indigo-600 border-r-transparent"></div>
             <p className="mt-4 text-gray-600">Loading...</p>
@@ -263,9 +294,9 @@ const LoginPage = () => {
         </div>
       }
     >
-      <LoginPageContent />
+      <LandlordLoginPageContent />
     </Suspense>
   );
 };
 
-export default LoginPage;
+export default LandlordLoginPage;

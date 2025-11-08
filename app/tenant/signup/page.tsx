@@ -1,3 +1,8 @@
+<<<<<<< HEAD
+=======
+// app/tenant/signup/page.tsx
+
+>>>>>>> 89d17f5e1d4587184003867fa0bd93e1fe1869f2
 "use client";
 
 import { useState } from "react";
@@ -5,16 +10,29 @@ import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { signIn } from "next-auth/react";
 
+<<<<<<< HEAD
 export default function TenantSignupPage() {
+=======
+/**
+ * Tenant Signup Page
+ *
+ * Dedicated signup page for tenants to create a new account.
+ * Creates a user with TENANT role and redirects to onboarding.
+ */
+const TenantSignupPage = () => {
+>>>>>>> 89d17f5e1d4587184003867fa0bd93e1fe1869f2
   const router = useRouter();
   const [formData, setFormData] = useState({
     name: "",
     email: "",
     password: "",
     confirmPassword: "",
+<<<<<<< HEAD
     phone: "",
     dateOfBirth: "",
     occupation: "",
+=======
+>>>>>>> 89d17f5e1d4587184003867fa0bd93e1fe1869f2
   });
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState("");
@@ -24,6 +42,10 @@ export default function TenantSignupPage() {
     setIsLoading(true);
     setError("");
 
+<<<<<<< HEAD
+=======
+    // Validation
+>>>>>>> 89d17f5e1d4587184003867fa0bd93e1fe1869f2
     if (formData.password !== formData.confirmPassword) {
       setError("Passwords do not match");
       setIsLoading(false);
@@ -37,7 +59,12 @@ export default function TenantSignupPage() {
     }
 
     try {
+<<<<<<< HEAD
       const response = await fetch("/api/auth/tenant/signup", {
+=======
+      // Call the signup API with role
+      const response = await fetch("/api/auth/signup", {
+>>>>>>> 89d17f5e1d4587184003867fa0bd93e1fe1869f2
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -46,20 +73,47 @@ export default function TenantSignupPage() {
           name: formData.name,
           email: formData.email,
           password: formData.password,
+<<<<<<< HEAD
           phone: formData.phone,
           dateOfBirth: formData.dateOfBirth,
           occupation: formData.occupation,
+=======
+          role: "TENANT",
+>>>>>>> 89d17f5e1d4587184003867fa0bd93e1fe1869f2
         }),
       });
 
       const data = await response.json();
 
       if (!response.ok) {
+<<<<<<< HEAD
         throw new Error(data.error || "Failed to create tenant account");
       }
 
       // Redirect to tenant signin page with success message instead of auto-login
       router.push("/tenant/signin?message=Account created successfully. Please log in.");
+=======
+        throw new Error(data.error || "Failed to create account");
+      }
+
+      // Auto-login after successful signup
+      const result = await signIn("credentials", {
+        email: formData.email,
+        password: formData.password,
+        redirect: false,
+      });
+
+      if (result?.error) {
+        // If auto-login fails, redirect to login page
+        router.push(
+          "/tenant/login?message=Account created successfully. Please log in."
+        );
+      } else {
+        // If auto-login succeeds, redirect to onboarding
+        router.push("/tenant/onboarding");
+        router.refresh();
+      }
+>>>>>>> 89d17f5e1d4587184003867fa0bd93e1fe1869f2
     } catch (error: unknown) {
       if (error instanceof Error) {
         setError(error.message);
@@ -78,10 +132,18 @@ export default function TenantSignupPage() {
     });
   };
 
+<<<<<<< HEAD
   const handleGoogleSignup = async () => {
     setIsLoading(true);
     try {
       await signIn("google", { callbackUrl: "/" });
+=======
+  // Handle Google OAuth signup
+  const handleGoogleSignup = async () => {
+    setIsLoading(true);
+    try {
+      await signIn("google", { callbackUrl: "/tenant/onboarding" });
+>>>>>>> 89d17f5e1d4587184003867fa0bd93e1fe1869f2
     } catch (error) {
       setError("An error occurred with Google signup");
       setIsLoading(false);
@@ -89,26 +151,67 @@ export default function TenantSignupPage() {
   };
 
   return (
+<<<<<<< HEAD
     <div className="flex min-h-screen items-center justify-center bg-gray-50 px-4 py-12 sm:px-6 lg:px-8">
       <div className="w-full max-w-md space-y-8">
         <div>
+=======
+    <div className="flex min-h-screen items-center justify-center bg-gradient-to-br from-green-50 to-emerald-100 px-4 py-12 sm:px-6 lg:px-8">
+      <div className="w-full max-w-md space-y-8">
+        <div>
+          <div className="flex justify-center">
+            <div className="rounded-full bg-emerald-600 p-3">
+              <svg
+                className="h-8 w-8 text-white"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth={2}
+                  d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"
+                />
+              </svg>
+            </div>
+          </div>
+>>>>>>> 89d17f5e1d4587184003867fa0bd93e1fe1869f2
           <h2 className="mt-6 text-center text-3xl font-bold tracking-tight text-gray-900">
             Create Tenant Account
           </h2>
           <p className="mt-2 text-center text-sm text-gray-600">
+<<<<<<< HEAD
             Already have an account?{" "}
             <Link
               href="/tenant/signin"
               className="font-medium text-green-600 hover:text-green-500"
+=======
+            Access your rental information and pay rent online
+          </p>
+          <p className="mt-2 text-center text-sm text-gray-600">
+            Already have an account?{" "}
+            <Link
+              href="/tenant/login"
+              className="font-medium text-emerald-600 hover:text-emerald-500"
+>>>>>>> 89d17f5e1d4587184003867fa0bd93e1fe1869f2
             >
               Sign in
             </Link>
           </p>
+<<<<<<< HEAD
           <p className="mt-2 text-center text-sm text-gray-600">
             Are you a landlord?{" "}
             <Link
               href="/landlord/signup"
               className="font-medium text-indigo-600 hover:text-indigo-500"
+=======
+          <p className="mt-4 text-center text-xs text-gray-500">
+            Are you a landlord?{" "}
+            <Link
+              href="/landlord/signup"
+              className="font-medium text-emerald-600 hover:text-emerald-500"
+>>>>>>> 89d17f5e1d4587184003867fa0bd93e1fe1869f2
             >
               Create landlord account
             </Link>
@@ -135,7 +238,11 @@ export default function TenantSignupPage() {
                 required
                 value={formData.name}
                 onChange={handleChange}
+<<<<<<< HEAD
                 className="relative block w-full rounded-md border-0 px-3 py-2 text-gray-900 ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:z-10 focus:ring-2 focus:ring-inset focus:ring-green-600 sm:text-sm sm:leading-6"
+=======
+                className="relative block w-full rounded-md border-0 px-3 py-2 text-gray-900 ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:z-10 focus:ring-2 focus:ring-inset focus:ring-emerald-600 sm:text-sm sm:leading-6"
+>>>>>>> 89d17f5e1d4587184003867fa0bd93e1fe1869f2
                 placeholder="Full name"
               />
             </div>
@@ -151,11 +258,16 @@ export default function TenantSignupPage() {
                 required
                 value={formData.email}
                 onChange={handleChange}
+<<<<<<< HEAD
                 className="relative block w-full rounded-md border-0 px-3 py-2 text-gray-900 ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:z-10 focus:ring-2 focus:ring-inset focus:ring-green-600 sm:text-sm sm:leading-6"
+=======
+                className="relative block w-full rounded-md border-0 px-3 py-2 text-gray-900 ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:z-10 focus:ring-2 focus:ring-inset focus:ring-emerald-600 sm:text-sm sm:leading-6"
+>>>>>>> 89d17f5e1d4587184003867fa0bd93e1fe1869f2
                 placeholder="Email address"
               />
             </div>
             <div>
+<<<<<<< HEAD
               <label htmlFor="phone" className="sr-only">
                 Phone number
               </label>
@@ -200,6 +312,8 @@ export default function TenantSignupPage() {
               />
             </div>
             <div>
+=======
+>>>>>>> 89d17f5e1d4587184003867fa0bd93e1fe1869f2
               <label htmlFor="password" className="sr-only">
                 Password
               </label>
@@ -211,7 +325,11 @@ export default function TenantSignupPage() {
                 required
                 value={formData.password}
                 onChange={handleChange}
+<<<<<<< HEAD
                 className="relative block w-full rounded-md border-0 px-3 py-2 text-gray-900 ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:z-10 focus:ring-2 focus:ring-inset focus:ring-green-600 sm:text-sm sm:leading-6"
+=======
+                className="relative block w-full rounded-md border-0 px-3 py-2 text-gray-900 ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:z-10 focus:ring-2 focus:ring-inset focus:ring-emerald-600 sm:text-sm sm:leading-6"
+>>>>>>> 89d17f5e1d4587184003867fa0bd93e1fe1869f2
                 placeholder="Password (min. 8 characters)"
               />
             </div>
@@ -227,7 +345,11 @@ export default function TenantSignupPage() {
                 required
                 value={formData.confirmPassword}
                 onChange={handleChange}
+<<<<<<< HEAD
                 className="relative block w-full rounded-md border-0 px-3 py-2 text-gray-900 ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:z-10 focus:ring-2 focus:ring-inset focus:ring-green-600 sm:text-sm sm:leading-6"
+=======
+                className="relative block w-full rounded-md border-0 px-3 py-2 text-gray-900 ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:z-10 focus:ring-2 focus:ring-inset focus:ring-emerald-600 sm:text-sm sm:leading-6"
+>>>>>>> 89d17f5e1d4587184003867fa0bd93e1fe1869f2
                 placeholder="Confirm password"
               />
             </div>
@@ -237,24 +359,42 @@ export default function TenantSignupPage() {
             <button
               type="submit"
               disabled={isLoading}
+<<<<<<< HEAD
               className="group relative flex w-full justify-center rounded-md bg-green-600 px-3 py-2 text-sm font-semibold text-white hover:bg-green-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-green-600 disabled:opacity-50"
             >
               {isLoading ? "Creating account..." : "Create Tenant Account"}
+=======
+              className="group relative flex w-full justify-center rounded-md bg-emerald-600 px-3 py-2 text-sm font-semibold text-white hover:bg-emerald-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-emerald-600 disabled:opacity-50"
+            >
+              {isLoading ? "Creating account..." : "Create tenant account"}
+>>>>>>> 89d17f5e1d4587184003867fa0bd93e1fe1869f2
             </button>
           </div>
         </form>
 
+<<<<<<< HEAD
+=======
+        {/* Divider */}
+>>>>>>> 89d17f5e1d4587184003867fa0bd93e1fe1869f2
         <div className="relative">
           <div className="absolute inset-0 flex items-center">
             <div className="w-full border-t border-gray-300" />
           </div>
           <div className="relative flex justify-center text-sm">
+<<<<<<< HEAD
             <span className="bg-gray-50 px-2 text-gray-500">
+=======
+            <span className="bg-gradient-to-br from-green-50 to-emerald-100 px-2 text-gray-500">
+>>>>>>> 89d17f5e1d4587184003867fa0bd93e1fe1869f2
               Or sign up with
             </span>
           </div>
         </div>
 
+<<<<<<< HEAD
+=======
+        {/* Google OAuth Signup */}
+>>>>>>> 89d17f5e1d4587184003867fa0bd93e1fe1869f2
         <div>
           <button
             onClick={handleGoogleSignup}
@@ -285,4 +425,10 @@ export default function TenantSignupPage() {
       </div>
     </div>
   );
+<<<<<<< HEAD
 }
+=======
+};
+
+export default TenantSignupPage;
+>>>>>>> 89d17f5e1d4587184003867fa0bd93e1fe1869f2

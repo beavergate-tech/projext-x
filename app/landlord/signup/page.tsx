@@ -1,3 +1,8 @@
+<<<<<<< HEAD
+=======
+// app/landlord/signup/page.tsx
+
+>>>>>>> 89d17f5e1d4587184003867fa0bd93e1fe1869f2
 "use client";
 
 import { useState } from "react";
@@ -5,15 +10,28 @@ import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { signIn } from "next-auth/react";
 
+<<<<<<< HEAD
 export default function LandlordSignupPage() {
+=======
+/**
+ * Landlord Signup Page
+ *
+ * Dedicated signup page for landlords to create a new account.
+ * Creates a user with LANDLORD role and redirects to onboarding.
+ */
+const LandlordSignupPage = () => {
+>>>>>>> 89d17f5e1d4587184003867fa0bd93e1fe1869f2
   const router = useRouter();
   const [formData, setFormData] = useState({
     name: "",
     email: "",
     password: "",
     confirmPassword: "",
+<<<<<<< HEAD
     phone: "",
     companyName: "",
+=======
+>>>>>>> 89d17f5e1d4587184003867fa0bd93e1fe1869f2
   });
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState("");
@@ -23,6 +41,10 @@ export default function LandlordSignupPage() {
     setIsLoading(true);
     setError("");
 
+<<<<<<< HEAD
+=======
+    // Validation
+>>>>>>> 89d17f5e1d4587184003867fa0bd93e1fe1869f2
     if (formData.password !== formData.confirmPassword) {
       setError("Passwords do not match");
       setIsLoading(false);
@@ -36,7 +58,12 @@ export default function LandlordSignupPage() {
     }
 
     try {
+<<<<<<< HEAD
       const response = await fetch("/api/auth/landlord/signup", {
+=======
+      // Call the signup API with role
+      const response = await fetch("/api/auth/signup", {
+>>>>>>> 89d17f5e1d4587184003867fa0bd93e1fe1869f2
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -45,19 +72,46 @@ export default function LandlordSignupPage() {
           name: formData.name,
           email: formData.email,
           password: formData.password,
+<<<<<<< HEAD
           phone: formData.phone,
           companyName: formData.companyName,
+=======
+          role: "LANDLORD",
+>>>>>>> 89d17f5e1d4587184003867fa0bd93e1fe1869f2
         }),
       });
 
       const data = await response.json();
 
       if (!response.ok) {
+<<<<<<< HEAD
         throw new Error(data.error || "Failed to create landlord account");
       }
 
       // Redirect to landlord signin page with success message instead of auto-login
       router.push("/landlord/signin?message=Account created successfully. Please log in.");
+=======
+        throw new Error(data.error || "Failed to create account");
+      }
+
+      // Auto-login after successful signup
+      const result = await signIn("credentials", {
+        email: formData.email,
+        password: formData.password,
+        redirect: false,
+      });
+
+      if (result?.error) {
+        // If auto-login fails, redirect to login page
+        router.push(
+          "/landlord/login?message=Account created successfully. Please log in."
+        );
+      } else {
+        // If auto-login succeeds, redirect to onboarding
+        router.push("/landlord/onboarding");
+        router.refresh();
+      }
+>>>>>>> 89d17f5e1d4587184003867fa0bd93e1fe1869f2
     } catch (error: unknown) {
       if (error instanceof Error) {
         setError(error.message);
@@ -76,10 +130,18 @@ export default function LandlordSignupPage() {
     });
   };
 
+<<<<<<< HEAD
   const handleGoogleSignup = async () => {
     setIsLoading(true);
     try {
       await signIn("google", { callbackUrl: "/" });
+=======
+  // Handle Google OAuth signup
+  const handleGoogleSignup = async () => {
+    setIsLoading(true);
+    try {
+      await signIn("google", { callbackUrl: "/landlord/onboarding" });
+>>>>>>> 89d17f5e1d4587184003867fa0bd93e1fe1869f2
     } catch (error) {
       setError("An error occurred with Google signup");
       setIsLoading(false);
@@ -87,26 +149,66 @@ export default function LandlordSignupPage() {
   };
 
   return (
+<<<<<<< HEAD
     <div className="flex min-h-screen items-center justify-center bg-gray-50 px-4 py-12 sm:px-6 lg:px-8">
       <div className="w-full max-w-md space-y-8">
         <div>
+=======
+    <div className="flex min-h-screen items-center justify-center bg-gradient-to-br from-blue-50 to-indigo-100 px-4 py-12 sm:px-6 lg:px-8">
+      <div className="w-full max-w-md space-y-8">
+        <div>
+          <div className="flex justify-center">
+            <div className="rounded-full bg-indigo-600 p-3">
+              <svg
+                className="h-8 w-8 text-white"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth={2}
+                  d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"
+                />
+              </svg>
+            </div>
+          </div>
+>>>>>>> 89d17f5e1d4587184003867fa0bd93e1fe1869f2
           <h2 className="mt-6 text-center text-3xl font-bold tracking-tight text-gray-900">
             Create Landlord Account
           </h2>
           <p className="mt-2 text-center text-sm text-gray-600">
+<<<<<<< HEAD
             Already have an account?{" "}
             <Link
               href="/landlord/signin"
+=======
+            Start managing your properties today
+          </p>
+          <p className="mt-2 text-center text-sm text-gray-600">
+            Already have an account?{" "}
+            <Link
+              href="/landlord/login"
+>>>>>>> 89d17f5e1d4587184003867fa0bd93e1fe1869f2
               className="font-medium text-indigo-600 hover:text-indigo-500"
             >
               Sign in
             </Link>
           </p>
+<<<<<<< HEAD
           <p className="mt-2 text-center text-sm text-gray-600">
             Are you a tenant?{" "}
             <Link
               href="/tenant/signup"
               className="font-medium text-green-600 hover:text-green-500"
+=======
+          <p className="mt-4 text-center text-xs text-gray-500">
+            Are you a tenant?{" "}
+            <Link
+              href="/tenant/signup"
+              className="font-medium text-indigo-600 hover:text-indigo-500"
+>>>>>>> 89d17f5e1d4587184003867fa0bd93e1fe1869f2
             >
               Create tenant account
             </Link>
@@ -154,6 +256,7 @@ export default function LandlordSignupPage() {
               />
             </div>
             <div>
+<<<<<<< HEAD
               <label htmlFor="phone" className="sr-only">
                 Phone number
               </label>
@@ -184,6 +287,8 @@ export default function LandlordSignupPage() {
               />
             </div>
             <div>
+=======
+>>>>>>> 89d17f5e1d4587184003867fa0bd93e1fe1869f2
               <label htmlFor="password" className="sr-only">
                 Password
               </label>
@@ -223,22 +328,38 @@ export default function LandlordSignupPage() {
               disabled={isLoading}
               className="group relative flex w-full justify-center rounded-md bg-indigo-600 px-3 py-2 text-sm font-semibold text-white hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600 disabled:opacity-50"
             >
+<<<<<<< HEAD
               {isLoading ? "Creating account..." : "Create Landlord Account"}
+=======
+              {isLoading ? "Creating account..." : "Create landlord account"}
+>>>>>>> 89d17f5e1d4587184003867fa0bd93e1fe1869f2
             </button>
           </div>
         </form>
 
+<<<<<<< HEAD
+=======
+        {/* Divider */}
+>>>>>>> 89d17f5e1d4587184003867fa0bd93e1fe1869f2
         <div className="relative">
           <div className="absolute inset-0 flex items-center">
             <div className="w-full border-t border-gray-300" />
           </div>
           <div className="relative flex justify-center text-sm">
+<<<<<<< HEAD
             <span className="bg-gray-50 px-2 text-gray-500">
+=======
+            <span className="bg-gradient-to-br from-blue-50 to-indigo-100 px-2 text-gray-500">
+>>>>>>> 89d17f5e1d4587184003867fa0bd93e1fe1869f2
               Or sign up with
             </span>
           </div>
         </div>
 
+<<<<<<< HEAD
+=======
+        {/* Google OAuth Signup */}
+>>>>>>> 89d17f5e1d4587184003867fa0bd93e1fe1869f2
         <div>
           <button
             onClick={handleGoogleSignup}
@@ -269,4 +390,10 @@ export default function LandlordSignupPage() {
       </div>
     </div>
   );
+<<<<<<< HEAD
 }
+=======
+};
+
+export default LandlordSignupPage;
+>>>>>>> 89d17f5e1d4587184003867fa0bd93e1fe1869f2

@@ -26,11 +26,12 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
     accountsTable: schema.accounts,
     sessionsTable: schema.sessions,
     verificationTokensTable: schema.verificationTokens,
-  }),
+  }) as never,
 
-  // Use database sessions for better security and session management
+  // Use JWT sessions for credentials provider compatibility
+  // Database sessions don't work well with credentials provider
   session: {
-    strategy: "database",
+    strategy: "jwt",
   },
 
   // Custom pages
@@ -103,6 +104,7 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
           id: user.id,
           email: user.email,
           name: user.name,
+          role: user.role,
           image: user.image,
           role: user.role,
         };
@@ -111,6 +113,7 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
   ],
 
   callbacks: {
+<<<<<<< HEAD
     // Add user id and role to session
     async session({ session, user }) {
       if (session.user) {
@@ -122,6 +125,22 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
         if (dbUser) {
           session.user.role = dbUser.role;
         }
+=======
+    // Add user id and role to JWT token
+    async jwt({ token, user }) {
+      // When user signs in, add id and role to token
+      if (user) {
+        token.id = user.id;
+        token.role = user.role;
+      }
+      return token;
+    },
+    // Add user id and role to session from token
+    async session({ session, token }) {
+      if (session.user) {
+        session.user.id = token.id as string;
+        session.user.role = token.role as "LANDLORD" | "TENANT";
+>>>>>>> 89d17f5e1d4587184003867fa0bd93e1fe1869f2
       }
       return session;
     },

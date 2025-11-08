@@ -1,3 +1,5 @@
+// app/tenant/login/page.tsx
+
 "use client";
 
 import { signIn } from "next-auth/react";
@@ -6,17 +8,17 @@ import { useSearchParams, useRouter } from "next/navigation";
 import Link from "next/link";
 
 /**
- * Login Page
+ * Tenant Login Page
  *
- * Supports three authentication methods:
+ * Dedicated login page for tenants with all authentication methods:
  * 1. Credentials (Email/Password)
  * 2. Google OAuth
  * 3. Magic Link (Email)
  */
-const LoginPageContent = () => {
+const TenantLoginPageContent = () => {
   const searchParams = useSearchParams();
   const router = useRouter();
-  const callbackUrl = searchParams.get("callbackUrl") || "/";
+  const callbackUrl = searchParams.get("callbackUrl") || "/tenant/dashboard";
 
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -87,7 +89,7 @@ const LoginPageContent = () => {
 
   if (magicLinkSent) {
     return (
-      <div className="flex min-h-screen items-center justify-center bg-gray-50 px-4 py-12 sm:px-6 lg:px-8">
+      <div className="flex min-h-screen items-center justify-center bg-gradient-to-br from-green-50 to-emerald-100 px-4 py-12 sm:px-6 lg:px-8">
         <div className="w-full max-w-md space-y-8">
           <div>
             <h2 className="mt-6 text-center text-3xl font-bold tracking-tight text-gray-900">
@@ -103,7 +105,7 @@ const LoginPageContent = () => {
           <div className="text-center">
             <button
               onClick={() => setMagicLinkSent(false)}
-              className="text-sm font-medium text-indigo-600 hover:text-indigo-500"
+              className="text-sm font-medium text-emerald-600 hover:text-emerald-500"
             >
               Back to login
             </button>
@@ -114,19 +116,48 @@ const LoginPageContent = () => {
   }
 
   return (
-    <div className="flex min-h-screen items-center justify-center bg-gray-50 px-4 py-12 sm:px-6 lg:px-8">
+    <div className="flex min-h-screen items-center justify-center bg-gradient-to-br from-green-50 to-emerald-100 px-4 py-12 sm:px-6 lg:px-8">
       <div className="w-full max-w-md space-y-8">
         <div>
+          <div className="flex justify-center">
+            <div className="rounded-full bg-emerald-600 p-3">
+              <svg
+                className="h-8 w-8 text-white"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth={2}
+                  d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"
+                />
+              </svg>
+            </div>
+          </div>
           <h2 className="mt-6 text-center text-3xl font-bold tracking-tight text-gray-900">
-            Sign in to your account
+            Tenant Portal
           </h2>
+          <p className="mt-2 text-center text-sm text-gray-600">
+            Sign in to access your rental information
+          </p>
           <p className="mt-2 text-center text-sm text-gray-600">
             Or{" "}
             <Link
-              href="/signup"
-              className="font-medium text-indigo-600 hover:text-indigo-500"
+              href="/tenant/signup"
+              className="font-medium text-emerald-600 hover:text-emerald-500"
             >
-              create a new account
+              create a tenant account
+            </Link>
+          </p>
+          <p className="mt-4 text-center text-xs text-gray-500">
+            Are you a landlord?{" "}
+            <Link
+              href="/landlord/login"
+              className="font-medium text-emerald-600 hover:text-emerald-500"
+            >
+              Click here to sign in
             </Link>
           </p>
         </div>
@@ -152,7 +183,7 @@ const LoginPageContent = () => {
                 required
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
-                className="relative block w-full rounded-t-md border-0 px-3 py-2 text-gray-900 ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:z-10 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
+                className="relative block w-full rounded-t-md border-0 px-3 py-2 text-gray-900 ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:z-10 focus:ring-2 focus:ring-inset focus:ring-emerald-600 sm:text-sm sm:leading-6"
                 placeholder="Email address"
               />
             </div>
@@ -168,7 +199,7 @@ const LoginPageContent = () => {
                 required
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
-                className="relative block w-full rounded-b-md border-0 px-3 py-2 text-gray-900 ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:z-10 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
+                className="relative block w-full rounded-b-md border-0 px-3 py-2 text-gray-900 ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:z-10 focus:ring-2 focus:ring-inset focus:ring-emerald-600 sm:text-sm sm:leading-6"
                 placeholder="Password"
               />
             </div>
@@ -178,7 +209,7 @@ const LoginPageContent = () => {
             <button
               type="submit"
               disabled={isLoading}
-              className="group relative flex w-full justify-center rounded-md bg-indigo-600 px-3 py-2 text-sm font-semibold text-white hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600 disabled:opacity-50"
+              className="group relative flex w-full justify-center rounded-md bg-emerald-600 px-3 py-2 text-sm font-semibold text-white hover:bg-emerald-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-emerald-600 disabled:opacity-50"
             >
               {isLoading ? "Signing in..." : "Sign in with Email"}
             </button>
@@ -191,7 +222,7 @@ const LoginPageContent = () => {
             <div className="w-full border-t border-gray-300" />
           </div>
           <div className="relative flex justify-center text-sm">
-            <span className="bg-gray-50 px-2 text-gray-500">
+            <span className="bg-gradient-to-br from-green-50 to-emerald-100 px-2 text-gray-500">
               Or continue with
             </span>
           </div>
@@ -251,21 +282,21 @@ const LoginPageContent = () => {
   );
 };
 
-const LoginPage = () => {
+const TenantLoginPage = () => {
   return (
     <Suspense
       fallback={
-        <div className="flex min-h-screen items-center justify-center bg-gray-50">
+        <div className="flex min-h-screen items-center justify-center bg-gradient-to-br from-green-50 to-emerald-100">
           <div className="text-center">
-            <div className="inline-block h-8 w-8 animate-spin rounded-full border-4 border-solid border-indigo-600 border-r-transparent"></div>
+            <div className="inline-block h-8 w-8 animate-spin rounded-full border-4 border-solid border-emerald-600 border-r-transparent"></div>
             <p className="mt-4 text-gray-600">Loading...</p>
           </div>
         </div>
       }
     >
-      <LoginPageContent />
+      <TenantLoginPageContent />
     </Suspense>
   );
 };
 
-export default LoginPage;
+export default TenantLoginPage;
