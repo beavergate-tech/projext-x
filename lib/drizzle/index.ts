@@ -26,11 +26,13 @@ import * as schema from "./schema";
  */
 const connectionString = process.env.DATABASE_URL!;
 
-// Create postgres.js client
+// Create postgres.js client optimized for serverless (Vercel)
 const queryClient = postgres(connectionString, {
   max: 1, // Recommended for serverless (Vercel, AWS Lambda)
+  prepare: false, // Disable prepared statements for serverless/pooling
   // For non-serverless deployments, you can increase this:
   // max: 10,
+  // prepare: true,
 });
 
 export const db = drizzle(queryClient, { schema });
