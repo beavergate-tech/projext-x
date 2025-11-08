@@ -1,19 +1,23 @@
+// app/api/auth/signup/route.ts
+
 import { NextResponse } from "next/server";
 import { db } from "@/lib/drizzle";
-import { users } from "@/lib/drizzle/schema";
+import { users, landlordProfiles, tenantProfiles } from "@/lib/drizzle/schema";
 import bcrypt from "bcryptjs";
 import { eq } from "drizzle-orm";
+import type { Role } from "@/lib/drizzle/schema/nextauth";
 
 /**
  * Signup API Route
  *
  * Creates a new user account with email and password.
  * Passwords are hashed using bcrypt before storing.
+ * Also creates the appropriate landlord or tenant profile.
  */
 export async function POST(request: Request) {
   try {
     const body = await request.json();
-    const { name, email, password } = body;
+    const { name, email, password, role } = body;
 
     // Validation
     if (!name || !email || !password) {
@@ -26,6 +30,15 @@ export async function POST(request: Request) {
     if (password.length < 8) {
       return NextResponse.json(
         { error: "Password must be at least 8 characters long" },
+        { status: 400 }
+      );
+    }
+
+    // Validate role
+    const userRole: Role = role || "TENANT";
+    if (userRole !== "LANDLORD" && userRole !== "TENANT") {
+      return NextResponse.json(
+        { error: "Invalid role. Must be LANDLORD or TENANT" },
         { status: 400 }
       );
     }
@@ -45,19 +58,37 @@ export async function POST(request: Request) {
     // Hash password
     const hashedPassword = await bcrypt.hash(password, 10);
 
-    // Create user
+    // Create user with role
     const [newUser] = await db
       .insert(users)
       .values({
         name,
         email,
         password: hashedPassword,
+        role: userRole,
       })
       .returning({
         id: users.id,
         name: users.name,
         email: users.email,
+        role: users.role,
       });
+
+    // Create corresponding profile based on role
+    if (userRole === "LANDLORD") {
+      await db.insert(landlordProfiles).values({
+        userId: newUser.id,
+        businessName: null, // Will be filled during onboarding
+      });
+    } else if (userRole === "TENANT") {
+      await db.insert(tenantProfiles).values({
+        userId: newUser.id,
+        dateOfBirth: null, // Will be filled during onboarding
+        occupation: null,
+        assignedPropertyId: null,
+        rentalId: null,
+      });
+    }
 
     return NextResponse.json(
       {
