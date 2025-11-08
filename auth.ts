@@ -60,17 +60,32 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
       credentials: {
         email: { label: "Email", type: "email" },
         password: { label: "Password", type: "password" },
+        role: { label: "Role", type: "text" },
       },
       async authorize(credentials) {
         if (!credentials?.email || !credentials?.password) {
           return null;
         }
 
+        // Build where condition based on role if provided
+        let whereCondition;
+        if (credentials.role) {
+          whereCondition = eq(schema.users.email, credentials.email as string);
+          // Note: Role filtering happens on the client side for security
+        } else {
+          whereCondition = eq(schema.users.email, credentials.email as string);
+        }
+
         const user = await db.query.users.findFirst({
-          where: eq(schema.users.email, credentials.email as string),
+          where: whereCondition,
         });
 
         if (!user || !user.password) {
+          return null;
+        }
+
+        // If role is specified, check if user has the correct role
+        if (credentials.role && user.role !== credentials.role) {
           return null;
         }
 
@@ -89,16 +104,24 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
           email: user.email,
           name: user.name,
           image: user.image,
+          role: user.role,
         };
       },
     }),
   ],
 
   callbacks: {
-    // Add user id to session
+    // Add user id and role to session
     async session({ session, user }) {
       if (session.user) {
         session.user.id = user.id;
+        // Get user role from database
+        const dbUser = await db.query.users.findFirst({
+          where: eq(schema.users.id, user.id),
+        });
+        if (dbUser) {
+          session.user.role = dbUser.role;
+        }
       }
       return session;
     },
