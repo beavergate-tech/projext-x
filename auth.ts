@@ -113,19 +113,6 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
   ],
 
   callbacks: {
-<<<<<<< HEAD
-    // Add user id and role to session
-    async session({ session, user }) {
-      if (session.user) {
-        session.user.id = user.id;
-        // Get user role from database
-        const dbUser = await db.query.users.findFirst({
-          where: eq(schema.users.id, user.id),
-        });
-        if (dbUser) {
-          session.user.role = dbUser.role;
-        }
-=======
     // Add user id and role to JWT token
     async jwt({ token, user }) {
       // When user signs in, add id and role to token
@@ -140,7 +127,6 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
       if (session.user) {
         session.user.id = token.id as string;
         session.user.role = token.role as "LANDLORD" | "TENANT";
->>>>>>> 89d17f5e1d4587184003867fa0bd93e1fe1869f2
       }
       return session;
     },
